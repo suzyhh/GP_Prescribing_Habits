@@ -14,3 +14,7 @@ with open("items for penicillins per 1,000 patients on list.csv") as csvfile:
             table.append(row)
 df=pd.DataFrame(table)
 print(df)
+
+print(df.head(3))
+#df_by_date=df.groupby()
+df.rename(columns={"0":"date"})
