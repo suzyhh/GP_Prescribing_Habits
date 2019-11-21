@@ -20,3 +20,7 @@ def plotting(data):
     pyplot.show()
 
 plotting(df_by_date_mean)
+
+df_by_date_std=df2.groupby("date")["normalisation"].std()
+meanstd_plus=df_by_date_mean + df_by_date_std
+meanstd_minus=df_by_date_mean - df_by_date_std
