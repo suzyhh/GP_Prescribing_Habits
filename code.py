@@ -24,7 +24,10 @@ df_by_date=df.groupby("date")
 df_by_date_mean=df.groupby("date")["normalisation"].mean()
 df_by_date_mean['2016-10-01']
 
-df_by_date_mean.plot()
-pyplot.show()
-#pyplot.plot(df_by_date_mean)
-#pyplot.show()
+def plotting(data):
+    '''Function for plotting a line graph
+    Data should be a table with date as the index and a column of data points'''
+    data.plot()
+    pyplot.show()
+
+plotting(df_by_date_mean)
