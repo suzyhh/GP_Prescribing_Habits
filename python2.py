@@ -7,7 +7,7 @@
 import csv
 import pandas as pd
 import matplotlib.pyplot as pyplot
-get_ipython().run_line_magic('matplotlib', 'inline')
+#get_ipython().run_line_magic('matplotlib', 'inline')
 
 
 # In[336]:
@@ -88,7 +88,8 @@ outliers2['date'] = pd.to_datetime(df_patients.date, format = '%d/%m/%Y')
 
 
 # In[364]:
-
+meanstd_plus=df_by_date_mean + df_by_date_std
+meanstd_minus=df_by_date_mean - df_by_date_std
 
 #create dataframe with the mean and the standard devations
 summary_data = pd.concat([df_by_date_mean,meanstd_minus, meanstd_plus], axis=1)
@@ -122,7 +123,7 @@ sort=summary_data.sort_index()
 pyplot.plot(sort)
 pyplot.plot_date(outliers1["date"],outliers1["normalisation"],c="red",markersize=3)
 pyplot.plot_date(outliers2["date"],outliers2["normalisation"],c="red",markersize=3)
-
+pyplot.show()
 
 # In[370]:
 
@@ -142,7 +143,7 @@ practices=df_patients.groupby("name")["normalisation"].mean()
 
 
 #find overall mean and standard deviation to identify outliers
-practices_mean=high_practices.mean()
+practices_mean=practices.mean()
 practices_std=practices.std()
 
 
