@@ -94,12 +94,12 @@ sorted_summary = prescription_summary.sort_index()
 
 
 # plotting the mean and standard deviation from summary data and then overlay with the outliers
-pyplot.plot(sorted_summary)
+[mean,plus,minus] = pyplot.plot(sorted_summary)
 pyplot.plot_date(outliers_over["date"], outliers_over["normalisation"], c="red", markersize=3)
-pyplot.plot_date(outliers_under["date"], outliers_under["normalisation"], c="red", markersize=3)
+[outlier] = pyplot.plot_date(outliers_under["date"], outliers_under["normalisation"], c="red", markersize=3)
 pyplot.xlabel('Year')
 pyplot.ylabel('Prescriptions (per 1000 patients)')
-#pyplot.legend([(sorted_summary[1], sorted_summary[2], sorted_summary[3]), ('label1', 'label2', 'label3')])
+pyplot.legend([mean,plus,minus, outlier], ["mean", "mean-1 stdev", "mean+1 stdev", "outliers"])
 pyplot.show()
 
 # In[370]:
