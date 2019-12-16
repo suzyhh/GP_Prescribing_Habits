@@ -7,7 +7,6 @@ import pandas as pd
 import matplotlib.pyplot as pyplot
 
 # get_ipython().run_line_magic('matplotlib', 'inline')
-fhds jfh sjk
 
 # In[337]:
 
