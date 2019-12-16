@@ -10,7 +10,14 @@ import matplotlib.pyplot as pyplot
 
 # In[337]:
 
-prescriptions_raw = pd.read_csv("items for penicillins per 1,000 patients on list.csv")
+#ask for a file to analyse and raise an exception if the file is not found in the working directory
+#for testing, the filename is "items for penicillins per 1,000 patients on list.csv"
+prescription_file=input("Enter the filename: ")
+try:
+    prescriptions_raw = pd.read_csv(prescription_file)
+except FileNotFoundError:
+    print("File does not exist, please enter a valid filename")
+    
 
 # remove rows that have 0 patients
 prescriptions = prescriptions_raw[prescriptions_raw["total_list_size"] != 0].copy()
