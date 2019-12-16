@@ -8,7 +8,7 @@ import matplotlib.pyplot as pyplot
 
 # get_ipython().run_line_magic('matplotlib', 'inline')
 
-
+fdfs
 # In[337]:
 
 prescriptions_raw = pd.read_csv("items for penicillins per 1,000 patients on list.csv")
