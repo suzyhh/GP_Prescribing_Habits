@@ -110,29 +110,42 @@ pyplot.show()
 
 # In[370]:
 
-# find the highest prescription for all months for all GP practices
-outliers_over[outliers_over['normalisation'] == outliers_over['normalisation'].max()]
 
-# In[371]:
+# find which GP in which month prescribed the most items
+highest_prescription=outliers_over[outliers_over['normalisation'] == outliers_over['normalisation'].max()]
+print("The most prescriptions were made by {} who prescribed {} items per 1000 patients in {}".format(highest_prescription["name"].to_string(index=False, header=False),highest_prescription["normalisation"].to_string(index=False, header=False),highest_prescription["date"].to_string(index=False, header=False)))
 
 # find mean for each GP practice over all time
 practices = prescriptions.groupby("name")["normalisation"].mean()
-
-# In[310]:
 
 # find overall mean and standard deviation to identify outliers
 practices_mean = practices.mean()
 practices_std = practices.std()
 
-# In[354]:
-
-
 # find GP practices that have a mean prescription level of more than 2 stds above the mean
 prac_outliers = practices > (practices_mean + (practices_std * 2))
 
-# In[355]:
+sum(prac_outliers)
+
+overall_outliers=prac_outliers[prac_outliers == True]
+
+#GP practice with the highest mean prescribing
+gp_with_highest_mean=practices[practices == practices.max()]
+
+#this still needs fixing to avoid user input of gp surgery
+highest_gp_name=list(gp_with_highest_mean.index)
+print(highest_gp_name,"has the highest overall mean prescribing of", gp_with_highest_mean[0],"per 1,000 patients")
 
 
-prac_outliers
+# pull out the month by month data for the GP surgery with the highest mean prescribing
+highest_gp_by_date=prescriptions[prescriptions['name'].str.match("HAWTHORN MC")]
 
-# In[ ]:
+#now we have the GP with the highest mean prescribing, plot it compared to the mean/std of all GPs to assess if it is an ongoing trend for this GP surgery or driven by a few extreme datapoints
+[mean,plus,minus] = pyplot.plot(sorted_summary)
+[highest]=pyplot.plot_date(highest_gp_by_date["date"], highest_gp_by_date["normalisation"],linestyle="solid",markersize=0)
+pyplot.xlabel('Year',rotation=0)
+pyplot.tick_params(axis='x', rotation=45)
+pyplot.ylabel('Prescriptions (per 1000 patients)')
+pyplot.legend([mean,plus,minus, highest], ["mean", "mean-1 stdev", "mean+1 stdev", "Hawthon MC"])
+pyplot.show()
+
