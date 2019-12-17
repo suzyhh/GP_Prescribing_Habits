@@ -160,6 +160,7 @@ pyplot.show()
 def plot_a_practice(GP_practice):
     try:
         practice_details=prescriptions[prescriptions['name'].str.match(pat=GP_practice,case=False)]
+        practice_details.date = pd.to_datetime(practice_details.date, format='%d/%m/%Y')
         [mean,plus,minus] = pyplot.plot(sorted_summary)
         [highest]=pyplot.plot_date(practice_details["date"], practice_details["normalisation"],linestyle="solid",markersize=0)
         pyplot.xlabel('Year',rotation=0)
@@ -171,5 +172,8 @@ def plot_a_practice(GP_practice):
         print("GP surgery does not exist")
 
 
-# Example for calling the plot_a_practice function
-plot_a_practice("fallowfield")
+GP_input_file=input("Enter the GP practice: ")
+try:
+    plot_a_practice(GP_input_file)
+except FileNotFoundError:
+    print("GP does not exist, please enter a valid GP")
