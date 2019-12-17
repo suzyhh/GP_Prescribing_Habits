@@ -10,8 +10,8 @@ import matplotlib.pyplot as pyplot
 
 # In[337]:
 
-#ask for a file to analyse and raise an exception if the file is not found in the working directory
-#for testing, the filename is "items for penicillins per 1,000 patients on list.csv"
+# ask for a file to analyse and raise an exception if the file is not found in the working directory
+# for testing, the filename is "items for penicillins per 1,000 patients on list.csv"
 prescription_file=input("Enter the filename: ")
 try:
     prescriptions_raw = pd.read_csv(prescription_file)
@@ -127,13 +127,13 @@ practices_std = practices.std()
 # find GP practices that have a mean prescription level of more than 2 stds above the mean
 prac_outliers = practices > (practices_mean + (practices_std * 2))
 
-#which GP practices are outliers?
+# which GP practices are outliers?
 overall_outliers=prac_outliers[prac_outliers == True]
 print("The following surgeries have high prescribing (more than 2 standard deviations above the mean): "
       "\n {}, {}, {}".format(overall_outliers.index[0],overall_outliers.index[1],overall_outliers.index[2]))
 
 
-#GP practice with the highest mean prescribing
+# GP practice with the highest mean prescribing
 gp_with_highest_mean=practices[practices == practices.max()]
 #print gp and month of highest prescribing
 print(gp_with_highest_mean.index[0],"has the highest overall mean prescribing of",
@@ -144,7 +144,7 @@ print(gp_with_highest_mean.index[0],"has the highest overall mean prescribing of
 highest_gp_by_date=prescriptions[prescriptions['name'].str.match(gp_with_highest_mean.index[0])]
 highest_gp_by_date.date = pd.to_datetime(highest_gp_by_date.date, format='%d/%m/%Y')
 
-#now we have the GP with the highest mean prescribing, plot it compared to the mean/std of all GPs to assess
+# now we have the GP with the highest mean prescribing, plot it compared to the mean/std of all GPs to assess
 # if it is an ongoing trend for this GP surgery or driven by a few extreme datapoints
 [mean,plus,minus] = pyplot.plot(sorted_summary)
 [highest]=pyplot.plot_date(highest_gp_by_date["date"], highest_gp_by_date["normalisation"],linestyle="solid",markersize=0)
@@ -155,8 +155,8 @@ pyplot.legend([mean,plus,minus, highest], ["mean", "mean-1 stdev", "mean+1 stdev
 pyplot.show()
 
 
-#function for plotting the prescribing of a single GP surgery compared to the mean/std of all surgerys
-#function will make a match from an incomplete input and is case insensitive (e.g. "hawthorn" will match to "HAWTHORN MC")
+# function for plotting the prescribing of a single GP surgery compared to the mean/std of all surgerys
+# function will make a match from an incomplete input and is case insensitive (e.g. "hawthorn" will match to "HAWTHORN MC")
 def plot_a_practice(GP_practice):
     try:
         practice_details=prescriptions[prescriptions['name'].str.match(pat=GP_practice,case=False)]
@@ -169,3 +169,7 @@ def plot_a_practice(GP_practice):
         pyplot.show()
     except ValueError:
         print("GP surgery does not exist")
+
+
+# Example for calling the plot_a_practice function
+plot_a_practice("fallowfield")
