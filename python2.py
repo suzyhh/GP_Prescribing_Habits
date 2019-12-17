@@ -125,20 +125,19 @@ practices_std = practices.std()
 # find GP practices that have a mean prescription level of more than 2 stds above the mean
 prac_outliers = practices > (practices_mean + (practices_std * 2))
 
-sum(prac_outliers)
-
+#which GP practices are outliers?
 overall_outliers=prac_outliers[prac_outliers == True]
+print("The following surgeries have high prescribing (more than 2 standard deviations above the mean): \n {}, {}, {}".format(overall_outliers.index[0],overall_outliers.index[1],overall_outliers.index[2]))
+
 
 #GP practice with the highest mean prescribing
 gp_with_highest_mean=practices[practices == practices.max()]
-
-#this still needs fixing to avoid user input of gp surgery
-highest_gp_name=list(gp_with_highest_mean.index)
-print(highest_gp_name,"has the highest overall mean prescribing of", gp_with_highest_mean[0],"per 1,000 patients")
+#print gp and month of highest prescribing
+print(gp_with_highest_mean.index[0],"has the highest overall mean prescribing of", gp_with_highest_mean[0],"per 1,000 patients")
 
 
 # pull out the month by month data for the GP surgery with the highest mean prescribing
-highest_gp_by_date=prescriptions[prescriptions['name'].str.match("HAWTHORN MC")]
+highest_gp_by_date=prescriptions[prescriptions['name'].str.match(gp_with_highest_mean.index[0])]
 
 #now we have the GP with the highest mean prescribing, plot it compared to the mean/std of all GPs to assess if it is an ongoing trend for this GP surgery or driven by a few extreme datapoints
 [mean,plus,minus] = pyplot.plot(sorted_summary)
@@ -146,8 +145,9 @@ highest_gp_by_date=prescriptions[prescriptions['name'].str.match("HAWTHORN MC")]
 pyplot.xlabel('Year',rotation=0)
 pyplot.tick_params(axis='x', rotation=45)
 pyplot.ylabel('Prescriptions (per 1000 patients)')
-pyplot.legend([mean,plus,minus, highest], ["mean", "mean-1 stdev", "mean+1 stdev", "Hawthon MC"])
+pyplot.legend([mean,plus,minus, highest], ["mean", "mean-1 stdev", "mean+1 stdev", gp_with_highest_mean.index[0]])
 pyplot.show()
+
 
 #function for plotting the prescribing of a single GP surgery compared to the mean/std of all surgerys
 #function will make a match from an incomplete input and is case insensitive (e.g. "hawthorn" will match to "HAWTHORN MC")
@@ -159,7 +159,7 @@ def plot_a_practice(GP_practice):
         pyplot.xlabel('Year',rotation=0)
         pyplot.tick_params(axis='x', rotation=45)
         pyplot.ylabel('Prescriptions (per 1000 patients)')
-        pyplot.legend([mean,plus,minus, highest], ["mean", "mean-1 stdev", "mean+1 stdev", str.lower(practice_to_plot)])
+        pyplot.legend([mean,plus,minus, highest], ["mean", "mean-1 stdev", "mean+1 stdev", GP_practice])
         pyplot.show()
     except ValueError:
         print("GP surgery does not exist")
