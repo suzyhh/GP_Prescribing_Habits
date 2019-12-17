@@ -158,22 +158,20 @@ pyplot.show()
 # function for plotting the prescribing of a single GP surgery compared to the mean/std of all surgerys
 # function will make a match from an incomplete input and is case insensitive (e.g. "hawthorn" will match to "HAWTHORN MC")
 def plot_a_practice(GP_practice):
-    try:
-        practice_details=prescriptions[prescriptions['name'].str.match(pat=GP_practice,case=False)]
-        practice_details.date = pd.to_datetime(practice_details.date, format='%d/%m/%Y')
-        [mean,plus,minus] = pyplot.plot(sorted_summary)
-        [highest]=pyplot.plot_date(practice_details["date"], practice_details["normalisation"],linestyle="solid",markersize=0)
-        pyplot.xlabel('Year',rotation=0)
-        pyplot.tick_params(axis='x', rotation=45)
-        pyplot.ylabel('Prescriptions (per 1000 patients)')
-        pyplot.legend([mean,plus,minus, highest], ["mean", "mean-1 stdev", "mean+1 stdev", GP_practice])
-        pyplot.show()
-    except ValueError:
+    practice_details=prescriptions[prescriptions['name'].str.match(pat=GP_practice,case=False)]
+    if len(practice_details) == 0:
         print("GP surgery does not exist")
-
-
+        return
+    print("GP surgery selected: ", practice_details.iloc[0,2])
+    #practice_details.date = pd.to_datetime(practice_details.date, format='%d/%m/%Y')
+    [mean,plus,minus] = pyplot.plot(sorted_summary)
+    [highest]=pyplot.plot_date(practice_details["date"], practice_details["normalisation"],linestyle="solid",markersize=0)
+    pyplot.xlabel('Year',rotation=0)
+    pyplot.tick_params(axis='x', rotation=45)
+    pyplot.ylabel('Prescriptions (per 1000 patients)')
+    pyplot.legend([mean,plus,minus, highest], ["mean", "mean-1 stdev", "mean+1 stdev", practice_details.iloc[0,2]])
+    pyplot.show()
+        
+        
 GP_input_file=input("Enter the GP practice: ")
-try:
-    plot_a_practice(GP_input_file)
-except FileNotFoundError:
-    print("GP does not exist, please enter a valid GP")
+plot_a_practice(GP_input_file)
