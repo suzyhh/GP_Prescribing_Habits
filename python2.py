@@ -149,3 +149,17 @@ pyplot.ylabel('Prescriptions (per 1000 patients)')
 pyplot.legend([mean,plus,minus, highest], ["mean", "mean-1 stdev", "mean+1 stdev", "Hawthon MC"])
 pyplot.show()
 
+#function for plotting the prescribing of a single GP surgery compared to the mean/std of all surgerys
+#function will make a match from an incomplete input and is case insensitive (e.g. "hawthorn" will match to "HAWTHORN MC")
+def plot_a_practice(GP_practice):
+    try:
+        practice_details=prescriptions[prescriptions['name'].str.match(pat=GP_practice,case=False)]
+        [mean,plus,minus] = pyplot.plot(sorted_summary)
+        [highest]=pyplot.plot_date(practice_details["date"], practice_details["normalisation"],linestyle="solid",markersize=0)
+        pyplot.xlabel('Year',rotation=0)
+        pyplot.tick_params(axis='x', rotation=45)
+        pyplot.ylabel('Prescriptions (per 1000 patients)')
+        pyplot.legend([mean,plus,minus, highest], ["mean", "mean-1 stdev", "mean+1 stdev", str.lower(practice_to_plot)])
+        pyplot.show()
+    except ValueError:
+        print("GP surgery does not exist")
