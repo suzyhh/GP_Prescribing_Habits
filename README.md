@@ -1,4 +1,4 @@
-# python
+# Prescription investigation using python
 
 This code is used to investigate the prescribing habits of Manchester CCG GP practices for antibiotics.
 
