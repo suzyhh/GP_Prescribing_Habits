@@ -129,7 +129,7 @@ prac_outliers = practices > (practices_mean + (practices_std * 2))
 
 # which GP practices are outliers?
 overall_outliers=prac_outliers[prac_outliers == True]
-print("The following surgeries have high prescribing (more than 2 standard deviations above the mean): "
+print("The following surgeries have consistently high prescribing (more than 2 standard deviations above the mean over all time): "
       "\n {}, {}, {}".format(overall_outliers.index[0],overall_outliers.index[1],overall_outliers.index[2]))
 
 
@@ -163,7 +163,7 @@ def plot_a_practice(GP_practice):
         print("GP surgery does not exist")
         return
     print("GP surgery selected: ", practice_details.iloc[0,2])
-    #practice_details.date = pd.to_datetime(practice_details.date, format='%d/%m/%Y')
+    practice_details.date = pd.to_datetime(practice_details.date, format='%d/%m/%Y')
     [mean,plus,minus] = pyplot.plot(sorted_summary)
     [highest]=pyplot.plot_date(practice_details["date"], practice_details["normalisation"],linestyle="solid",markersize=0)
     pyplot.xlabel('Year',rotation=0)
