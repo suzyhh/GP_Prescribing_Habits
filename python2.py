@@ -162,12 +162,15 @@ def plot_a_practice(GP_practice):
     if len(practice_details) == 0:
         print("GP surgery does not exist")
         return
+    uniq_lst=[]
+    for surgery in practice_details["name"]:
+        if surgery not in uniq_lst:
+            uniq_lst.append(surgery)
+    if len(uniq_lst) > 1:
+        print("Error, more than one GP has been selected, please be more specific:\n", uniq_lst)
+        return
     elif practice_details.iloc[0,2] == practice_details.iloc[1,2]:
         print("GP surgery selected: ", practice_details.iloc[0, 2])
-    else:
-        print("Error, more than one GP has been selected, please be more specific:\n {}, {}".format(practice_details.iloc[0,2],
-                                                                                                    practice_details.iloc[1,2]))
-        return
     practice_details.date = pd.to_datetime(practice_details.date, format='%d/%m/%Y')
     [mean, plus, minus] = pyplot.plot(sorted_summary)
     [highest] = pyplot.plot_date(practice_details["date"], practice_details["normalisation"], linestyle="solid",
