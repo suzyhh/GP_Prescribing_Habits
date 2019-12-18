@@ -160,7 +160,7 @@ pyplot.show()
 def plot_a_practice(GP_practice):
     practice_details = prescriptions[prescriptions['name'].str.match(pat=".*{}.*".format(GP_input_file), case=False)]
     if len(practice_details) == 0:
-        print("GP surgery does not exist")
+        print("GP surgery does not exist, please enter a valid GP")
         return
     uniq_lst=[]
     for surgery in practice_details["name"]:
@@ -169,7 +169,7 @@ def plot_a_practice(GP_practice):
     if len(uniq_lst) > 1:
         print("Error, more than one GP has been selected, please be more specific:\n", uniq_lst)
         return
-    elif practice_details.iloc[0,2] == practice_details.iloc[1,2]:
+    else:
         print("GP surgery selected: ", practice_details.iloc[0, 2])
     practice_details.date = pd.to_datetime(practice_details.date, format='%d/%m/%Y')
     [mean, plus, minus] = pyplot.plot(sorted_summary)
