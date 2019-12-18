@@ -158,11 +158,16 @@ pyplot.show()
 # function for plotting the prescribing of a single GP surgery compared to the mean/std of all surgerys
 # function will make a match from an incomplete input and is case insensitive (e.g. "hawthorn" will match to "HAWTHORN MC")
 def plot_a_practice(GP_practice):
-    practice_details = prescriptions[prescriptions['name'].str.match(pat=GP_practice, case=False)]
+    practice_details = prescriptions[prescriptions['name'].str.match(pat=".*{}.*".format(GP_input_file), case=False)]
     if len(practice_details) == 0:
         print("GP surgery does not exist")
         return
-    print("GP surgery selected: ", practice_details.iloc[0, 2])
+    elif practice_details.iloc[0,2] == practice_details.iloc[1,2]:
+        print("GP surgery selected: ", practice_details.iloc[0, 2])
+    else:
+        print("Error, more than one GP has been selected, please be more specific:\n {}, {}".format(practice_details.iloc[0,2],
+                                                                                                    practice_details.iloc[1,2]))
+        return
     practice_details.date = pd.to_datetime(practice_details.date, format='%d/%m/%Y')
     [mean, plus, minus] = pyplot.plot(sorted_summary)
     [highest] = pyplot.plot_date(practice_details["date"], practice_details["normalisation"], linestyle="solid",
