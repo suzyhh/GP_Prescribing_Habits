@@ -64,7 +64,7 @@ outliers_under = prescriptions[(prescriptions['z'] <= -2)].copy()
 # In[344]:
 
 
-# need to convert to timeseries
+# convert to timeseries
 # df2['date'] = pd.to_datetime(df2.date, format = '%d/%m/%Y')
 # df_by_date_mean = pd.to_datetime(df2.date, format = '%d/%m/%Y')
 outliers_over['date'] = pd.to_datetime(prescriptions.date, format='%d/%m/%Y')
@@ -155,22 +155,14 @@ pyplot.legend([mean, plus, minus, highest], ["mean", "mean-1 stdev", "mean+1 std
 pyplot.show()
 
 
-# function for plotting the prescribing of a single GP surgery compared to the mean/std of all surgerys
-# function will make a match from an incomplete input and is case insensitive (e.g. "hawthorn" will match to "HAWTHORN MC")
+# In[371]:
+
 def plot_a_practice(GP_practice):
+    """Plotting the prescribing of a single GP surgery compared to the mean/std of all surgerys
+    A match will be made from an incomplete input and is case insensitive (e.g. "hawthorn" will match to "HAWTHORN MC")
+    """
     practice_details = prescriptions[prescriptions['name'].str.match(pat=".*{}.*".format(GP_input_file), case=False)]
-    if len(practice_details) == 0:
-        print("GP surgery does not exist, please enter a valid GP")
-        return
-    uniq_lst=[]
-    for surgery in practice_details["name"]:
-        if surgery not in uniq_lst:
-            uniq_lst.append(surgery)
-    if len(uniq_lst) > 1:
-        print("Error, more than one GP has been selected, please be more specific:\n", uniq_lst)
-        return
-    else:
-        print("GP surgery selected: ", practice_details.iloc[0, 2])
+    print("GP surgery selected: ", practice_details.iloc[0, 2])
     practice_details.date = pd.to_datetime(practice_details.date, format='%d/%m/%Y')
     [mean, plus, minus] = pyplot.plot(sorted_summary)
     [highest] = pyplot.plot_date(practice_details["date"], practice_details["normalisation"], linestyle="solid",
@@ -181,6 +173,31 @@ def plot_a_practice(GP_practice):
     pyplot.legend([mean, plus, minus, highest], ["mean", "mean-1 stdev", "mean+1 stdev", practice_details.iloc[0, 2]])
     pyplot.show()
 
+def check_gp_lookup(GP_practice):
+    """Check valid GP practice is found"""
+    practice_details = prescriptions[prescriptions['name'].str.match(pat=".*{}.*".format(GP_input_file), case=False)]
+    if len(practice_details) == 0:
+        raise NameError
+    global uniq_lst
+    uniq_lst = []
+    for surgery in practice_details["name"]:
+        if surgery not in uniq_lst:
+            uniq_lst.append(surgery)
+    if len(uniq_lst) > 1:
+        raise LookupError
 
 GP_input_file = input("Enter the GP practice: ")
-plot_a_practice(GP_input_file)
+
+while True:
+    try:
+        check_gp_lookup(GP_input_file)
+        plot_a_practice(GP_input_file)
+        break
+    except LookupError:
+        print("more than one GP has been selected, please be more specific:", uniq_lst)
+        GP_input_file = input("Enter the GP practice: ")
+    except NameError:
+        print("GP surgery does not exist, please enter a valid GP")
+        GP_input_file = input("Enter the GP practice: ")
+
+
